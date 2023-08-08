@@ -1,12 +1,16 @@
 package com.sistemaprueba.sistemaprueba.controllers;
 
+import com.sistemaprueba.sistemaprueba.entities.Rol;
 import com.sistemaprueba.sistemaprueba.entities.Usuario;
+import com.sistemaprueba.sistemaprueba.repositories.RolRepository;
 import com.sistemaprueba.sistemaprueba.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -17,7 +21,10 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("")
+    @Autowired
+    private RolRepository rolRepository;
+
+    @GetMapping
     public ResponseEntity<?> getAll(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(usuarioService.findAll());
@@ -35,23 +42,28 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping("")
-    public ResponseEntity<?>save(@RequestBody Usuario usuario){
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(usuarioService.save(usuario));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. Intente de nuevo más tarde.\"}");
+    @PostMapping
+    public ResponseEntity<?>save(@RequestBody Usuario usuario) throws Exception {
+        Optional<Rol> rolOptional = this.rolRepository.findById(usuario.getRol().getIdRol());
+        if (!rolOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERROR : El ID del ROL que ingresaste no exite");
         }
+        usuario.setRol(rolOptional.get());
+        Usuario usu = this.usuarioService.save(usuario);
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.save(usu));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody Usuario usuario){
-        try {
-         return ResponseEntity.status(HttpStatus.OK).body(usuarioService.update(id, usuario));
-        }catch(Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Error. Intente de nuevo más tarde.\"}");
+    public ResponseEntity<?> update(@PathVariable Long id,@RequestBody Usuario usuario) throws Exception {
+        Optional<Rol> rolOptional = this.rolRepository.findById(usuario.getRol().getIdRol());
+        if (!rolOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ERROR : El ID del ROL que ingresaste no exite");
         }
+        usuario.setRol(rolOptional.get());
+        Usuario usu = this.usuarioService.update(id,usuario);
+        return ResponseEntity.status(HttpStatus.OK).body(usuarioService.save(usu));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?>delete(@PathVariable Long id){

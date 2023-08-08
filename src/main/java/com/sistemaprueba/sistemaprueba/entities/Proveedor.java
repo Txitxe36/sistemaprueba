@@ -1,5 +1,6 @@
 package com.sistemaprueba.sistemaprueba.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,7 +32,9 @@ public class Proveedor {
     @Column(nullable = false,length = 50)
     private String direccion;
 
+
     @OneToMany(mappedBy ="proveedor", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Producto> listaProducto;
 
 

@@ -1,8 +1,9 @@
 package com.sistemaprueba.sistemaprueba.services;
 
-import com.sistemaprueba.sistemaprueba.controllers.repositories.EntradaRepository;
-import com.sistemaprueba.sistemaprueba.entities.Cliente;
+import com.sistemaprueba.sistemaprueba.entities.Producto;
+import com.sistemaprueba.sistemaprueba.repositories.EntradaRepository;
 import com.sistemaprueba.sistemaprueba.entities.Entrada;
+import com.sistemaprueba.sistemaprueba.repositories.ProductoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class EntradaService implements BaseService<Entrada>{
 
     @Autowired
     private EntradaRepository entradaRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Override
     @Transactional
@@ -54,8 +58,16 @@ public class EntradaService implements BaseService<Entrada>{
     public Entrada update(Long id, Entrada entity) throws Exception {
         try {
             Optional<Entrada> entradaOptional = entradaRepository.findById(id);
+            entradaOptional.get().setFecha(entity.getFecha());
+            entradaOptional.get().setCantidad(entity.getCantidad());
+            entradaOptional.get().setPrecio(entity.getPrecio());
+            entradaOptional.get().setProducto(entity.getProducto());
+
+            Optional<Producto> optionalProducto = this.productoRepository.findById(entity.getProducto().getIdProducto());
+
+            entradaOptional.get().setProducto(optionalProducto.get());
             Entrada entrada = entradaOptional.get();
-            entrada = entradaRepository.save(entity);
+            //entrada = entradaRepository.save(entity);
             return entrada;
         }catch (Exception e){
             throw new Exception(e.getMessage());

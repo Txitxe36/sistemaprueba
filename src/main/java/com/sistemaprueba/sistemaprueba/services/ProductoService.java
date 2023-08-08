@@ -1,8 +1,6 @@
 package com.sistemaprueba.sistemaprueba.services;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
-import com.sistemaprueba.sistemaprueba.controllers.repositories.ProductoRepository;
-import com.sistemaprueba.sistemaprueba.entities.Factura;
+import com.sistemaprueba.sistemaprueba.repositories.ProductoRepository;
 import com.sistemaprueba.sistemaprueba.entities.Producto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +53,12 @@ public class ProductoService implements BaseService<Producto> {
     public Producto update(Long id, Producto entity) throws Exception {
         try {
             Optional<Producto> productoOptional = productoRepository.findById(id);
+            productoOptional.get().setDescripcion(entity.getDescripcion());
+            productoOptional.get().setPrecio(entity.getPrecio());
+            productoOptional.get().setStock(entity.getStock());
+            productoOptional.get().setProveedor(entity.getProveedor());
             Producto producto = productoOptional.get();
-            producto = productoRepository.save(entity);
+            //producto = productoRepository.save(entity);
             return producto;
         }catch (Exception e){
             throw new Exception(e.getMessage());

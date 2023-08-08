@@ -1,7 +1,7 @@
 package com.sistemaprueba.sistemaprueba.services;
 
 import com.sistemaprueba.sistemaprueba.entities.Cliente;
-import com.sistemaprueba.sistemaprueba.controllers.repositories.ClienteRepository;
+import com.sistemaprueba.sistemaprueba.repositories.ClienteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,8 +53,12 @@ public class ClienteService implements BaseService<Cliente>{
     public Cliente update(Long id, Cliente entity) throws Exception {
         try {
             Optional<Cliente> clienteOptional = clienteRepository.findById(id);
+            clienteOptional.get().setNombre(entity.getNombre());
+            clienteOptional.get().setDni(entity.getDni());
+            clienteOptional.get().setTelefono(entity.getTelefono());
+            clienteOptional.get().setDireccion(entity.getDireccion());
             Cliente cliente = clienteOptional.get();
-            cliente = clienteRepository.save(entity);
+            //cliente = clienteRepository.save(entity);
             return cliente;
         }catch (Exception e){
             throw new Exception(e.getMessage());

@@ -1,8 +1,11 @@
 package com.sistemaprueba.sistemaprueba.services;
 
-import com.sistemaprueba.sistemaprueba.controllers.repositories.DetalleFacturaRepoitory;
-import com.sistemaprueba.sistemaprueba.entities.DetalleFactura;
 import com.sistemaprueba.sistemaprueba.entities.Factura;
+import com.sistemaprueba.sistemaprueba.entities.Producto;
+import com.sistemaprueba.sistemaprueba.repositories.DetalleFacturaRepoitory;
+import com.sistemaprueba.sistemaprueba.entities.DetalleFactura;
+import com.sistemaprueba.sistemaprueba.repositories.FacturaRepository;
+import com.sistemaprueba.sistemaprueba.repositories.ProductoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,12 @@ public class DetalleFacturaService implements BaseService<DetalleFactura>{
 
     @Autowired
     private DetalleFacturaRepoitory detalleFacturaRepoitory;
+
+    @Autowired
+    private FacturaRepository facturaRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     @Override
     @Transactional
@@ -54,8 +63,16 @@ public class DetalleFacturaService implements BaseService<DetalleFactura>{
     public DetalleFactura update(Long id, DetalleFactura entity) throws Exception {
         try {
             Optional<DetalleFactura> detalleFacturaOptional = detalleFacturaRepoitory.findById(id);
+            Optional<Factura> optionalFactura = this.facturaRepository.findById(detalleFacturaOptional.get().getFactura().getIdFactura());
+            Optional<Producto> optionalProducto = this.productoRepository.findById(detalleFacturaOptional.get().getProducto().getIdProducto());
+
+            detalleFacturaOptional.get().setCantidad(entity.getCantidad());
+            detalleFacturaOptional.get().setPrecioTotal(entity.getPrecioTotal());
+            detalleFacturaOptional.get().setFactura(optionalFactura.get());
+            detalleFacturaOptional.get().setProducto(optionalProducto.get());
+
             DetalleFactura detalleFactura = detalleFacturaOptional.get();
-            detalleFactura = detalleFacturaRepoitory.save(entity);
+            //detalleFactura = detalleFacturaRepoitory.save(entity);
             return detalleFactura;
         }catch (Exception e){
             throw new Exception(e.getMessage());

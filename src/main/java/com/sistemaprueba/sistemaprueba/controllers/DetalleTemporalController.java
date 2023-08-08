@@ -2,11 +2,17 @@ package com.sistemaprueba.sistemaprueba.controllers;
 
 import com.sistemaprueba.sistemaprueba.entities.Cliente;
 import com.sistemaprueba.sistemaprueba.entities.DetalleTemporal;
+import com.sistemaprueba.sistemaprueba.entities.Factura;
+import com.sistemaprueba.sistemaprueba.entities.Producto;
+import com.sistemaprueba.sistemaprueba.repositories.FacturaRepository;
+import com.sistemaprueba.sistemaprueba.repositories.ProductoRepository;
 import com.sistemaprueba.sistemaprueba.services.DetalleTempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -15,6 +21,7 @@ public class DetalleTemporalController {
 
     @Autowired
     private DetalleTempService detalleTemporalService;
+
 
     @GetMapping("")
     public ResponseEntity<?> getAll(){

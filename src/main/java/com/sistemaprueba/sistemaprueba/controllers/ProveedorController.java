@@ -34,7 +34,7 @@ public class ProveedorController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<?>save(@RequestBody Proveedor proveedor){
         try{
             return  ResponseEntity.status(HttpStatus.OK).body(proveedorService.save(proveedor));

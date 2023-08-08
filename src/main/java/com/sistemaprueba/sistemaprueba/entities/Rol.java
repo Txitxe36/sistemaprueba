@@ -1,5 +1,6 @@
 package com.sistemaprueba.sistemaprueba.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class Rol {
     @Column(name = "rol",nullable = false)
     private String rol;
 
-    /*
+    @JsonIgnore
     @OneToMany(mappedBy ="rol",cascade = CascadeType.ALL)
-    private List<Usuario> listaUsuario;*/
+    private List<Usuario> listaUsuario;
 }

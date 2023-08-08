@@ -1,9 +1,13 @@
 package com.sistemaprueba.sistemaprueba.services;
 
-import com.sistemaprueba.sistemaprueba.controllers.repositories.FacturaRepository;
 import com.sistemaprueba.sistemaprueba.entities.Cliente;
+import com.sistemaprueba.sistemaprueba.entities.Usuario;
+import com.sistemaprueba.sistemaprueba.repositories.ClienteRepository;
+import com.sistemaprueba.sistemaprueba.repositories.FacturaRepository;
 import com.sistemaprueba.sistemaprueba.entities.Factura;
+import com.sistemaprueba.sistemaprueba.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,12 @@ public class FacturaService implements BaseService<Factura>{
 
     @Autowired
     private FacturaRepository facturaRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional
@@ -54,8 +64,17 @@ public class FacturaService implements BaseService<Factura>{
     public Factura update(Long id, Factura entity) throws Exception {
         try {
             Optional<Factura> facturaOptional = facturaRepository.findById(id);
+            facturaOptional.get().setFecha(entity.getFecha());
+            facturaOptional.get().setTotalFactura(entity.getTotalFactura());
+
+            Optional<Cliente> clienteOptional = this.clienteRepository.findById(entity.getCliente().getId());
+            Optional<Usuario> usuarioOptional = this.usuarioRepository.findById(entity.getUsuario().getId());
+
+            facturaOptional.get().setCliente(clienteOptional.get());
+            facturaOptional.get().setUsuario(usuarioOptional.get());
+
             Factura factura = facturaOptional.get();
-            factura = facturaRepository.save(entity);
+            //factura = facturaRepository.save(entity);
             return factura;
         }catch (Exception e){
             throw new Exception(e.getMessage());

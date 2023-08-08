@@ -1,9 +1,12 @@
 package com.sistemaprueba.sistemaprueba.services;
 
+import com.sistemaprueba.sistemaprueba.entities.Cliente;
 import com.sistemaprueba.sistemaprueba.entities.Rol;
-import com.sistemaprueba.sistemaprueba.controllers.repositories.RolRepository;
+import com.sistemaprueba.sistemaprueba.repositories.RolRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,10 +55,10 @@ public class RolService implements BaseService<Rol>{
     @Transactional
     public Rol update(Long id, Rol entity) throws Exception {
         try {
-           Optional<Rol> entityOptional = rolRepository.findById(id);
+           Optional<Rol> entityOptional = this.rolRepository.findById(id);
+           entityOptional.get().setRol(entity.getRol());
            Rol rol = entityOptional.get();
-           rol = rolRepository.save(entity);
-            return rol;
+           return rol;
         }catch (Exception e) {
             throw new Exception(e.getMessage());
         }

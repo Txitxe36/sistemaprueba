@@ -1,13 +1,12 @@
 package com.sistemaprueba.sistemaprueba.services;
 
-import com.sistemaprueba.sistemaprueba.controllers.repositories.ProductoRepository;
-import com.sistemaprueba.sistemaprueba.controllers.repositories.ProveedorRepository;
-import com.sistemaprueba.sistemaprueba.entities.Cliente;
+import com.sistemaprueba.sistemaprueba.repositories.ProveedorRepository;
 import com.sistemaprueba.sistemaprueba.entities.Proveedor;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,8 +54,12 @@ public class ProveedorService implements  BaseService<Proveedor>{
     public Proveedor update(Long id, Proveedor entity) throws Exception {
         try {
             Optional<Proveedor> proveedorOptional = proveedorRepository.findById(id);
+            proveedorOptional.get().setNombre(entity.getNombre());
+            proveedorOptional.get().setEmail(entity.getEmail());
+            proveedorOptional.get().setTelefono(entity.getTelefono());
+            proveedorOptional.get().setDireccion(entity.getDireccion());
             Proveedor proveedor = proveedorOptional.get();
-            proveedor = proveedorRepository.save(entity);
+            //proveedor = proveedorRepository.save(entity);
             return proveedor;
         }catch (Exception e){
             throw new Exception(e.getMessage());

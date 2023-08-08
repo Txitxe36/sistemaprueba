@@ -1,7 +1,7 @@
 package com.sistemaprueba.sistemaprueba.services;
 
 import com.sistemaprueba.sistemaprueba.entities.Usuario;
-import com.sistemaprueba.sistemaprueba.controllers.repositories.UsuarioRepository;
+import com.sistemaprueba.sistemaprueba.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,8 +52,13 @@ public class UsuarioService implements BaseService<Usuario>{
     public Usuario update(Long id, Usuario entity) throws Exception {
         try {
             Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+            usuarioOptional.get().setNombre(entity.getNombre());
+            usuarioOptional.get().setEmail(entity.getEmail());
+            usuarioOptional.get().setUsuario(entity.getUsuario());
+            usuarioOptional.get().setClave(entity.getClave());
+            usuarioOptional.get().setRol(entity.getRol());
             Usuario usuario  = usuarioOptional.get();
-            usuario = usuarioRepository.save(entity);
+            //usuario = usuarioRepository.save(entity);
             return usuario;
         }catch (Exception e) {
             throw new Exception();
